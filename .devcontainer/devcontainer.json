@@ -17,7 +17,7 @@
   "portsAttributes": {
     "80": {
       "label": "Velxio — ESP32-C3 IDE",
-      "onAutoForward": "openBrowser",
+      "onAutoForward": "openPreview",
       "protocol": "http"
     }
   },
