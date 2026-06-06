@@ -1,0 +1,41 @@
+{
+  "name": "ESP32-C3 Arduino — Velxio",
+
+  // Usa la imagen oficial de Velxio que incluye ESP-IDF, Arduino-ESP32,
+  // arduino-cli y QEMU para simular el ESP32-C3.
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "velxio",
+  "workspaceFolder": "/workspace",
+
+  // Inicia los servicios de Velxio (nginx + FastAPI) al abrir el Codespace.
+  // Espera hasta 60 s a que el endpoint /health responda antes de continuar.
+  "postStartCommand": "/app/entrypoint.sh > /tmp/velxio.log 2>&1 & for i in $(seq 1 12); do sleep 5 && curl -sf http://localhost/health && break || true; done; curl -sf http://localhost/health || (echo '⚠ Velxio no arrancó. Revisa /tmp/velxio.log' && exit 1)",
+
+  // Reenvío de puertos:
+  //   80  → IDE web de Velxio (escribe y simula código Arduino para el ESP32-C3)
+  "forwardPorts": [80],
+  "portsAttributes": {
+    "80": {
+      "label": "Velxio — ESP32-C3 IDE",
+      "onAutoForward": "openBrowser",
+      "protocol": "http"
+    }
+  },
+
+  "remoteUser": "root",
+
+  // Extensiones de VS Code recomendadas para desarrollo con Arduino / ESP32
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "ms-python.python"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "C_Cpp.intelliSenseEngine": "default"
+      }
+    }
+  }
+}
